@@ -4,6 +4,10 @@ A Deep Learning based face identification system that recognizes Indian cricket 
 
 The system uses OpenCV Face Detection, SFace Face Recognition embeddings and similarity matching to identify the closest matching player.
 
+![Python](https://img.shields.io/badge/Python-3.13-blue)
+![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-green)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-Deep%20Learning-orange)
+![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
 ---
 
 # 📌 Project Overview
