@@ -214,6 +214,10 @@ Images should have:
 - Different lighting
 - Single person
 
+## Demo
+
+![App Demo](screenshots/home.png)
+
 
 ---
 
@@ -357,5 +361,10 @@ More images improve accuracy.
 Clear face images give better results.
 Similar looking players may reduce similarity score.
 Minimum 30 images per player recommended.
+
+
 👨‍💻 Author
 Nishant Kumar
+
+GitHub:
+https://github.com/Nishant20361
