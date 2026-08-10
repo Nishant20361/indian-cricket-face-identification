@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual Environment
+venv/
+.env
+
+# Mac
+.DS_Store
+
+# Original dataset
+dataset/
+
+# Split dataset
+dataset_split/
+
+# Test images
+test_images/
+test_set/
+
+# Generated processed data
+processed_dataset/
+
+# Cache
+.streamlit/
