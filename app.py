@@ -381,30 +381,56 @@ with input_tab1:
         selected_image_bgr = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
 
 with input_tab2:
-    camera_file = st.camera_input("Take a photo using your camera")
-    if camera_file is not None:
-        file_bytes = np.asarray(bytearray(camera_file.getvalue()), dtype=np.uint8)
-        selected_image_bgr = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+    st.markdown(
+        "Click **Enable Camera** below to activate your webcam. "
+        "Your browser will then ask for camera permission."
+    )
+    if "camera_enabled" not in st.session_state:
+        st.session_state.camera_enabled = False
+
+    if not st.session_state.camera_enabled:
+        if st.button("📷 Enable Camera", key="enable_camera"):
+            st.session_state.camera_enabled = True
+            st.rerun()
+    else:
+        camera_file = st.camera_input("Take a snapshot for identification")
+        if camera_file is not None:
+            file_bytes = np.asarray(bytearray(camera_file.getvalue()), dtype=np.uint8)
+            selected_image_bgr = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+        if st.button("🔇 Disable Camera", key="disable_camera"):
+            st.session_state.camera_enabled = False
+            st.rerun()
 
 with input_tab3:
     st.write("Click any sample image below to run instant face identification:")
     
+    # Uses the git-committed samples/ folder so images are available on Streamlit Cloud
+    SAMPLES_DIR = BASE_DIR / "samples"
     samples = [
-        {"name": "Virat Kohli", "path": BASE_DIR / "test_images" / "virat.jpg"},
-        {"name": "MS Dhoni", "path": BASE_DIR / "test_set" / "MS_Dhoni" / "test1.jpg"},
-        {"name": "Rohit Sharma", "path": BASE_DIR / "test_set" / "Rohit_Sharma" / "test1.jpg"},
-        {"name": "Jasprit Bumrah", "path": BASE_DIR / "test_set" / "Jasprit_Bumrah" / "test1.jpg"},
-        {"name": "Hardik Pandya", "path": BASE_DIR / "test_set" / "Hardik_Pandya" / "test1.jpg"}
+        {"name": "Virat Kohli",   "emoji": "👑", "path": SAMPLES_DIR / "Virat_Kohli.jpg"},
+        {"name": "MS Dhoni",      "emoji": "🦁", "path": SAMPLES_DIR / "MS_Dhoni.jpg"},
+        {"name": "Rohit Sharma",  "emoji": "💥", "path": SAMPLES_DIR / "Rohit_Sharma.jpg"},
+        {"name": "Jasprit Bumrah","emoji": "⚡", "path": SAMPLES_DIR / "Jasprit_Bumrah.jpg"},
+        {"name": "Hardik Pandya", "emoji": "🔥", "path": SAMPLES_DIR / "Hardik_Pandya.jpg"}
     ]
     
-    cols = st.columns(len(samples))
-    for i, sample in enumerate(samples):
-        with cols[i]:
-            if sample["path"].exists():
-                img_pil = Image.open(sample["path"])
-                st.image(img_pil, use_container_width=True, caption=sample["name"])
-                if st.button(f"Test {sample['name']}", key=f"btn_{i}"):
-                    selected_image_bgr = cv2.imread(str(sample["path"]))
+    if not SAMPLES_DIR.exists() or not any(SAMPLES_DIR.iterdir()):
+        st.warning(
+            "⚠️ Sample images folder (`samples/`) not found. "
+            "Run `cp test_images/virat.jpg samples/Virat_Kohli.jpg` etc. "
+            "or use the Upload tab instead."
+        )
+    else:
+        cols = st.columns(len(samples))
+        for i, sample in enumerate(samples):
+            with cols[i]:
+                if sample["path"].exists():
+                    img_pil = Image.open(sample["path"])
+                    st.image(img_pil, use_container_width=True, caption=f"{sample['emoji']} {sample['name']}")
+                    if st.button(f"Identify {sample['name']}", key=f"btn_{i}", use_container_width=True):
+                        selected_image_bgr = cv2.imread(str(sample["path"]))
+                else:
+                    st.info(f"{sample['emoji']} {sample['name']}\n\nImage not available")
 
 
 # ==============================================
