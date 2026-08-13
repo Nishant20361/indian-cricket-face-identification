@@ -4,17 +4,18 @@ import numpy as np
 from sklearn.metrics import classification_report, confusion_matrix
 
 
+from pathlib import Path
+
 # ==========================================
 # Configuration
 # ==========================================
 
-TEST_DIR = "test_set"
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-EMBEDDINGS_PATH = "models/face_embeddings.npz"
-
-SFACE_MODEL = "models/face_recognition_sface_2021dec.onnx"
-
-YUNET_MODEL = "models/face_detection_yunet_2023mar.onnx"
+TEST_DIR = BASE_DIR / "test_set"
+EMBEDDINGS_PATH = BASE_DIR / "models" / "face_embeddings.npz"
+SFACE_MODEL = BASE_DIR / "models" / "face_recognition_sface_2021dec.onnx"
+YUNET_MODEL = BASE_DIR / "models" / "face_detection_yunet_2023mar.onnx"
 
 THRESHOLD = 0.45
 
@@ -37,7 +38,7 @@ database_labels = data["labels"]
 # ==========================================
 
 detector = cv2.FaceDetectorYN.create(
-    YUNET_MODEL,
+    str(YUNET_MODEL),
     "",
     (320, 320),
     0.9,
@@ -46,7 +47,7 @@ detector = cv2.FaceDetectorYN.create(
 )
 
 recognizer = cv2.FaceRecognizerSF.create(
-    SFACE_MODEL,
+    str(SFACE_MODEL),
     ""
 )
 
